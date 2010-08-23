@@ -1,0 +1,34 @@
+
+This contains an implementation to calculate the optimum set of loans
+given a comma-delimited input file of loans and loan sets in the following 
+format:
+
+loan id, loan amount, set id, set minimum, set maximum
+...
+
+Usage:
+
+The program should be invoked as:
+
+build_loan_sets.rb -i <input file>
+
+For example:
+
+build_loan_sets.rb -i loan-basket-01.csv
+
+and will generate a file loan-based-01.out.csv containing the allocations.
+
+Input file format notes:
+
+If there are more loans than sets (the usual case), then the
+columns for loan sets should be empty; e.g.,
+
+1004,183000,,,
+
+If there are more sets than loans, then the CSV columns should just
+be blank, e.g.:
+
+,,14,2000000,4000000
+
+Installation:
+
