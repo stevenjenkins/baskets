@@ -93,14 +93,14 @@ def process_data
   @loan_sets.sort! {|a,b| a.maximum <=> b.maximum}
   @loan_sets.map {|ls| @containers << ls.maximum}
   @containers.sort!
-# TODO: add support for opt[:exact]
   max_set = @containers[-1]
   if max_set > 200000
     reduction_factor = max_set/200000
   else
     reduction_factor = 1
   end
-#puts "using reduction factor of #{reduction_factor} as max loan set is #{max_set}"
+  reduction_factor = 1 if @arguments[:exact]
+#puts "using reduction factor of #{reduction_factor} with max loan set size of #{max_set}"
 #puts "potential profit is #{@containers.reduce(:+).to_i}"
   @raw.collect! {|loan| loan/reduction_factor}
   @containers.collect! {|maximum| maximum/reduction_factor}
