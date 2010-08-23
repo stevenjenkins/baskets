@@ -6,7 +6,7 @@ format:
 loan id, loan amount, set id, set minimum, set maximum
 ...
 
-Usage:
+USAGE:
 
 The program should be invoked as:
 
@@ -18,7 +18,7 @@ build_loan_sets.rb -i loan-basket-01.csv
 
 and will generate a file loan-based-01.out.csv containing the allocations.
 
-Input file format notes:
+INPUT FILE FORMAT NOTES:
 
 If there are more loans than sets (the usual case), then the
 columns for loan sets should be empty; e.g.,
@@ -30,5 +30,35 @@ be blank, e.g.:
 
 ,,14,2000000,4000000
 
-Installation:
+MANIFEST:
+
+README - this file
+build_loan_sets.rb - the program
+sample.rb - a sample script using the NP API
+test.rb - a set of tests
+extconf.rb - an internal program to build the NP API
+mulknap.c - the underlying knapsack algorithm solution code
+np.c - the bridge code between Ruby and mulknap.c
+loan-basket-01.csv - a sample input dataset
+loan-basket-01-out.csv - a sample output dataset
+
+INSTALLATION:
+
+- on a Unix system that has Ruby installed, installation is simply:
+   ruby extconf.rb
+   make
+
+- on a Windows system, installation is essentially the same, but the
+devkit package must be installed.  Somewhat detailed steps are:
+1- install Ruby 1.8.7 to C:\Ruby (http://rubyforge.org/frs/download.php/72085/rubyinstaller-1.8.7-p302.exe)
+2- install DevKit (http://rubyinstaller.org/add-ons/devkit/); note that
+this will also need the 7-zip software: http://www.7-zip.org/
+3- start a command shell
+4- cd to the directory containing this file
+5- run "ruby extconf.rb"
+6- run "make"
+7- you can then run "build_loan_sets.rb -i loan-basket-01.csv" to regenerate the sample output file.  If Windows complains that it cannot open the file build_loan_sets.rb, you can specify to use ruby in the invocation, i.e.,
+  ruby build_loan_sets.rb -i loan-basket-01.csv
+
+
 
