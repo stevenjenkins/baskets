@@ -40,10 +40,7 @@
    definitions
    ====================================================================== */
 // Ruby
-//#define RUBY
-#ifdef RUBY
-# include "ruby.h"
-#endif
+#include "ruby.h"
 
 // SATisfiability 
 #ifdef __cplusplus
@@ -246,7 +243,7 @@ static char *salloc(int n)
 /*************** FMT *******************/
 /* RETURN POINTER TO FORMATTED STRING */
 /* CALLED AS fmt(format,arg0,arg1,...) */
-extern "C" char *fmt(char *fmt, ...)
+char *fmt(char *fmt, ...)
 {
   va_list args;
   char *f;
@@ -293,7 +290,7 @@ int random_int(int max,
    type declarations
    ====================================================================== */
 
-typedef int           boolean; /* logical variable         */
+typedef int           mk_boolean; /* logical variable         */
 typedef long          ntype;   /* number of states         */
 typedef long         itype;   /* item profits and weights */
 typedef long          stype;   /* sum of profit or weight  */
@@ -361,7 +358,7 @@ typedef struct {
   itype    range;        /* data range                */
   mtype    m;            /* number of knapsacks       */
   ntype    n;            /* number of items           */
-  boolean  sim;          /* similar capacities        */
+  mk_boolean  sim;          /* similar capacities        */
   stype    *cap;         /* all capacities */
   item     *fitem;       /* first item in problem     */
   item     *litem;       /* last item in problem      */
@@ -390,7 +387,7 @@ typedef struct {
   stype   *wcap;        /* cap info of each knapsack */
   wgtset   da;           /* set of partial vectors    */
   wgtset   db;           /* set of partial vectors    */
-  boolean  finish2;      /* did we reach optimum      */
+  mk_boolean  finish2;      /* did we reach optimum      */
   stype    psum2;        /* solution profit sum       */
   stype    wsum2;        /* solution weight sum       */
 
@@ -424,8 +421,8 @@ typedef struct {
   stype    ub;
   stype    psumb;
   stype    wsumb;
-  boolean  firsttime;
-  boolean  welldef;
+  mk_boolean  firsttime;
+  mk_boolean  welldef;
   partset  d;                 /* set of partial vectors */
   interval *intv1, *intv2;
   interval *intv1b, *intv2b;
@@ -971,7 +968,7 @@ static void definesolution2(state *a, wstate *i1, wstate *j1)
    reducewgtset
    ====================================================================== */
 
-static void reducewgtset(state *a, boolean update)
+static void reducewgtset(state *a, mk_boolean update)
 {
   register wstate *i, *j, *k, *l;
   register stype ws, iw, kw, c, maxw;
@@ -1028,7 +1025,7 @@ static void reducewgtset(state *a, boolean update)
    findwbreak
    ====================================================================== */
 
-static void findwbreak(state *a, mtype m, boolean update)
+static void findwbreak(state *a, mtype m, mk_boolean update)
 {
   register item *i, *j;
   register stype c, c1;
@@ -1080,7 +1077,7 @@ static void findwbreak(state *a, mtype m, boolean update)
    partition
    ====================================================================== */
 
-static void partition(state *a, boolean update)
+static void partition(state *a, mk_boolean update)
 {
   stype c;
   mtype m;
@@ -1121,7 +1118,7 @@ static void partition(state *a, boolean update)
    subset_sum
    ====================================================================== */
 
-static void subset_sum(state *a, boolean update, stype *c)
+static void subset_sum(state *a, mk_boolean update, stype *c)
 {
   stype wsum, tight, lb;
   mtype k;
@@ -1364,7 +1361,7 @@ static void partsort(state *a, item *f, item *l, stype ws, int what)
    haschance
    ====================================================================== */
 
-static boolean haschance(state *a, item *i, int side)
+static mk_boolean haschance(state *a, item *i, int side)
 {
   register dpstate *j, *m;
   register ptype p, w, r;
@@ -2077,7 +2074,7 @@ static void mulbranch(state *a, stype *c1)
 // w: an array of weights of each item to stuff in knapsacks
 // x: an array indicating which knapsack each item is stuffed into
 // c: an array of capacities of each knapsack
-extern "C" int mulknap(int n, int m, int *p, int *w, int *x, int *c)
+int mulknap(int n, int m, int *p, int *w, int *x, int *c)
 {
   register ntype i, l;
   register item *j, *k;
@@ -2248,7 +2245,7 @@ static int resetbins( int bound, int m, int *c, int *bin )
 }
 
 
-extern "C" int symmetric_subsum( int lower, int upper, int n, int m, int *p, int *w, int *x, int *bin, int vlvl )
+int symmetric_subsum( int lower, int upper, int n, int m, int *p, int *w, int *x, int *bin, int vlvl )
 {
   int bound = lower;
   int z;
@@ -2347,7 +2344,7 @@ extern "C" int symmetric_subsum( int lower, int upper, int n, int m, int *p, int
  *      	(note: items that weight less than 1 will be ignored)
  *      n:  1,2,...,(2**31) - 1
  */
-extern "C" int subsetsum( int n, int tgtsum, int *w, int *x, int vlvl )
+int subsetsum( int n, int tgtsum, int *w, int *x, int vlvl )
 {
   int  c;
   int  bin;
