@@ -11,7 +11,9 @@
 #define MAX(x,y) ((x>y)?(x):(y))
 char *fmt(char *fmt, ...);
 typedef signed char   ttype;  
-
+int mulknap(int, int, int *, int *, int *, int *);
+int symmetric_subsum(int, int, int, int, int *, int *, int *, int *, int);
+int subsetsum(int, int, int *, int *, int);
 
 // first, some utilities
 static void bin_prnt_byte(unsigned char x)
@@ -267,7 +269,7 @@ np_subsetsum(VALUE self, VALUE ary_values, VALUE tgt)
 	// what should all the input numbers add up to?
 	tgtsum = (int)NUM2LONG(tgt);
 
-	int *t = calloc(n,sizeof(int));
+	int *t = (int *)calloc(n,sizeof(int));
 
 	r = 0;
 
@@ -283,7 +285,7 @@ np_subsetsum(VALUE self, VALUE ary_values, VALUE tgt)
 
 	validate_c_numeric_array_range(t, r, (1<<15)/*upper_bound*/);
 
-	int *x = calloc(n,sizeof(int));
+	int *x = (int *)calloc(n,sizeof(int));
 
 	if(vlvl>3)fprintf(stderr, "np_sss:r: %i n: %i tgt: %i\n",r,n,tgtsum);
 
@@ -371,7 +373,7 @@ np_symsubsum(VALUE self, VALUE ary_values, VALUE num_partitions)
 		return result;
 	}
 
-	int *w = calloc(n,sizeof(int));
+	int *w = (int *)calloc(n,sizeof(int));
 
 	r = 0;
 
@@ -387,7 +389,7 @@ np_symsubsum(VALUE self, VALUE ary_values, VALUE num_partitions)
 
 	validate_c_numeric_array_range(w, r, (1<<15)/*upper_bound*/);
 
-	int *x = calloc(n,sizeof(int));
+	int *x = (int *)calloc(n,sizeof(int));
 
 	if(vlvl>3)fprintf(stderr, "np_sym:r: %i n: %i p: %i\n",r,n,p);
 
@@ -595,7 +597,7 @@ np_mulknap(VALUE self, VALUE ary_weights, VALUE ary_profits, VALUE ary_capacitie
 		hexdump( (char *)cc, -1 + sizeof(int)*cl, stdout, 1 );
 	}
 
-	int *x = calloc(wl,sizeof(int));
+	int *x = (int *)calloc(wl,sizeof(int));
 
 	// the core algorithm call
 	int profit = mulknap(wl, cl, pc, wc, x, cc);
