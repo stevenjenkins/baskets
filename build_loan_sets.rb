@@ -72,7 +72,6 @@ def read_data(infile)
   File.open(infile) do |f|
     f.each do |line|
       lid,amt,sid,minimum,maximum = line.chomp.split(',')
-#puts lid,amt,sid,minimum,maximum
       if lid
        loan = Loan.new(lid.to_i,amt.to_i)
        @loans << loan
@@ -101,22 +100,22 @@ def process_data
   else
     reduction_factor = 1
   end
-  puts "using reduction factor of #{reduction_factor} as max loan set is #{max_set}"
-  puts "potential profit is #{@containers.reduce(:+).to_i}"
+#puts "using reduction factor of #{reduction_factor} as max loan set is #{max_set}"
+#puts "potential profit is #{@containers.reduce(:+).to_i}"
   @raw.collect! {|loan| loan/reduction_factor}
   @containers.collect! {|maximum| maximum/reduction_factor}
   @weights = @raw.dup
   @profits = @weights.dup
   total_profit,basket_vector = NP::mulknap(@weights, @profits, @containers)
 # TODO: this doesn't handle rounding correctly
-  puts "profit is #{total_profit * reduction_factor}"
-  puts "basket vector is #{basket_vector}"
+#puts "profit is #{total_profit * reduction_factor}"
+#puts "basket vector is #{basket_vector}"
 # allocations are: [ [set, loan id, amount], ...]
   allocations = []
   basket_vector.each_with_index do |container_index,raw_index|
     allocations << [container_index, @loans[raw_index].id, @loans[raw_index].amount]
   end
-  puts "allocations are #{allocations.inspect}"
+#puts "allocations are #{allocations.inspect}"
   allocations.each do |allocation| 
     loanset_index,lid,amt = allocation;
 # the Mulknap algorithm has '0' if the loan does not go into a set, and
@@ -124,7 +123,7 @@ def process_data
     next if loanset_index == 0;
     loanset_index -= 1
 #@loan_sets.index(sid).loans << Loan.new(lid,amt)
-    puts "set = #{@loan_sets[loanset_index].sid}, id = #{lid}, amt = #{amt}"
+#puts "set = #{@loan_sets[loanset_index].sid}, id = #{lid}, amt = #{amt}"
     @loan_sets[loanset_index].loans << Loan.new(lid,amt)
   end
 end
@@ -132,12 +131,13 @@ end
 def write_output(outfile)
   open(outfile, 'w') do |f|
     @loan_sets.each do |ls|
-      puts "Loan Set, #{ls.sid},"
-      puts "Min = #{ls.minimum}, Max = #{ls.maximum}, Total = #{ls.loans.reduce {|loan| total += loan.amount}.to_i}"
-      puts 'Loans,,'
-      ls.loans.each do |loan|
-        puts "#{loan.id}, #{loan.amount},"
+      f.puts "Loan Set, #{ls.sid},"
+      f.puts "Min = #{ls.minimum}, Max = #{ls.maximum}, Total = #{ls.loans.reduce(0) {|total,loan| total += loan.amount}.to_i}"
+      f.puts 'Loans,,'
+      ls.loans.sort {|a,b| a.id <=> b.id}.each do |loan|
+        f.puts "#{loan.id}, #{loan.amount},"
       end
+      f.puts ',,,'
     end
   end
 end
